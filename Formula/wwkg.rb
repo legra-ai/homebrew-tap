@@ -15,6 +15,10 @@ class Wwkg < Formula
       url "https://releases.wwkg.io/builds/0.11.0.207/wwkg-0.11.0.207-linux-x86_64.tar.gz"
       sha256 "ee41236d34b8ae8b7121c1c9eceeca909a47a5f4d910a57518a3aabdc68b725e"
     end
+    on_arm do
+      url "https://releases.wwkg.io/builds/0.11.0.207/wwkg-0.11.0.207-linux-aarch64.tar.gz"
+      sha256 "0000000000000000000000000000000000000000000000000000000000000000"
+    end
   end
 
   def install

@@ -18,6 +18,7 @@ jobs:
           VERSION: ${{ github.event.client_payload.version }}
           DARWIN_AARCH64_SHA256: ${{ github.event.client_payload.darwin_aarch64_sha256 }}
           LINUX_X86_64_SHA256: ${{ github.event.client_payload.linux_x86_64_sha256 }}
+          LINUX_AARCH64_SHA256: ${{ github.event.client_payload.linux_aarch64_sha256 }}
         run: |
           cat > Formula/wwkg.rb <<FORMULA
           class Wwkg < Formula
@@ -36,6 +37,10 @@ jobs:
               on_intel do
                 url "https://releases.wwkg.io/builds/${VERSION}/wwkg-${VERSION}-linux-x86_64.tar.gz"
                 sha256 "${LINUX_X86_64_SHA256}"
+              end
+              on_arm do
+                url "https://releases.wwkg.io/builds/${VERSION}/wwkg-${VERSION}-linux-aarch64.tar.gz"
+                sha256 "${LINUX_AARCH64_SHA256}"
               end
             end
 
