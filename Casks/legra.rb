@@ -7,6 +7,8 @@ cask "legra" do
   desc "Peer-to-peer knowledge graph platform"
   homepage "https://legra.ai/"
 
+  disable! date: "2026-08-12", because: "the current macOS package is not signed"
+
   depends_on arch: :arm64
   depends_on :macos
 
