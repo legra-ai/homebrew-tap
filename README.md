@@ -12,7 +12,7 @@ Homebrew formulae maintained by Legra.
 brew install --cask legra-ai/tap/legra
 ```
 
-The cask runs Legra's signed macOS package. After administrator authorization,
+The cask runs Legra's macOS package. After administrator authorization,
 the package installs the CLI and daemon binaries and automatically registers and
 starts the host, gateway, custodian, and worker as system LaunchDaemons. They run
 at boot without requiring a user to log in. The licensor binary is included for
