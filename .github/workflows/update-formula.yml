@@ -6,7 +6,7 @@ on:
 
 jobs:
   update:
-    name: Update wwkg formula
+    name: Update Legra formula
     runs-on: ubuntu-latest
 
     steps:
@@ -20,60 +20,62 @@ jobs:
           LINUX_X86_64_SHA256: ${{ github.event.client_payload.linux_x86_64_sha256 }}
           LINUX_AARCH64_SHA256: ${{ github.event.client_payload.linux_aarch64_sha256 }}
         run: |
-          cat > Formula/wwkg.rb <<FORMULA
-          class Wwkg < Formula
-            desc "World Wide Knowledge Graph — peer-to-peer graph database"
-            homepage "https://wwkg.io"
+          cat > Formula/legra.rb <<FORMULA
+          class Legra < Formula
+            desc "Peer-to-peer knowledge graph platform"
+            homepage "https://legra.ai"
             version "${VERSION}"
             license "Proprietary"
 
             on_macos do
-              # Apple Silicon only — Intel Macs use Rosetta 2
-              url "https://releases.wwkg.io/builds/${VERSION}/wwkg-${VERSION}-darwin-aarch64.tar.gz"
-              sha256 "${DARWIN_AARCH64_SHA256}"
+              depends_on arch: :arm64
+              on_arm do
+                url "https://releases.legra.ai/builds/${VERSION}/legra-${VERSION}-darwin-aarch64.tar.gz"
+                sha256 "${DARWIN_AARCH64_SHA256}"
+              end
             end
 
             on_linux do
               on_intel do
-                url "https://releases.wwkg.io/builds/${VERSION}/wwkg-${VERSION}-linux-x86_64.tar.gz"
+                url "https://releases.legra.ai/builds/${VERSION}/legra-${VERSION}-linux-x86_64.tar.gz"
                 sha256 "${LINUX_X86_64_SHA256}"
               end
               on_arm do
-                url "https://releases.wwkg.io/builds/${VERSION}/wwkg-${VERSION}-linux-aarch64.tar.gz"
+                url "https://releases.legra.ai/builds/${VERSION}/legra-${VERSION}-linux-aarch64.tar.gz"
                 sha256 "${LINUX_AARCH64_SHA256}"
               end
             end
 
             def install
-              bin.install "wwkg"
-              bin.install "wwkg-node"
-              bin.install "wwkg-gateway"
-            end
-
-            def post_install
-              system bin/"wwkg", "install", "--all", "--user", "--no-start"
+              bin.install "legra"
+              bin.install "legra-host"
+              bin.install "legra-gateway"
+              bin.install "legra-custodian"
+              bin.install "legra-worker"
+              bin.install "legra-licensor"
             end
 
             def caveats
               <<~EOS
-                To start the WWKG node and gateway:
-                  wwkg node start
-                  wwkg gateway start
+                To install and start Legra's per-user services:
+                  legra install --all --user
               EOS
             end
 
             test do
-              assert_match "WWKG", shell_output("#{bin}/wwkg --help")
-              assert_match version.to_s.split(".")[0..2].join("."),
-                           shell_output("#{bin}/wwkg-node version")
-              assert_match version.to_s.split(".")[0..2].join("."),
-                           shell_output("#{bin}/wwkg-gateway version")
+              assert_match version.to_s, shell_output("#{bin}/legra --version")
+              %w[legra-host legra-gateway legra-custodian legra-worker legra-licensor].each do |executable|
+                assert_predicate bin/executable, :executable?
+              end
             end
           end
           FORMULA
 
           # Remove leading whitespace from heredoc indentation
-          sed -i 's/^          //' Formula/wwkg.rb
+          sed -i 's/^          //' Formula/legra.rb
+
+          test/formula-contract.sh
+          brew style Formula/legra.rb
 
           echo "Updated formula to version ${VERSION}"
           echo "  darwin-aarch64 sha256: ${DARWIN_AARCH64_SHA256}"
@@ -83,7 +85,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add Formula/wwkg.rb
+          git add Formula/legra.rb
           git diff --cached --quiet && echo "No changes" && exit 0
           git commit -m "chore(formula): update to ${{ github.event.client_payload.version }}"
           git push

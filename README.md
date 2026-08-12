@@ -1,52 +1,37 @@
-# homebrew-tap
+# Legra Homebrew tap
 
-[![Website](https://img.shields.io/badge/website-wwkg.io-0a7ea4)](https://wwkg.io)
-[![Homebrew Tap](https://img.shields.io/badge/homebrew-dataroadinc%2Ftap-2e7d32)](https://github.com/dataroadinc/homebrew-tap)
+[![Website](https://img.shields.io/badge/website-legra.ai-0a7ea4)](https://legra.ai)
+[![Homebrew Tap](https://img.shields.io/badge/homebrew-legra--ai%2Ftap-2e7d32)](https://github.com/legra-ai/homebrew-tap)
 [![License: MIT](https://img.shields.io/badge/license-MIT-yellow.svg)](./LICENSE)
 
-Homebrew tap for [DataRoad Inc.](https://wwkg.io) projects.
+Homebrew formulae maintained by Legra.
 
-## Tap
+## Install Legra
 
 ```bash
-brew tap dataroadinc/tap
+brew install legra-ai/tap/legra
 ```
 
-## Formulae
-
-### wwkg
-
-The [World Wide Knowledge Graph](https://wwkg.io) — a peer-to-peer graph
-database with SPARQL, Cypher, and GQL support. Installs all three binaries:
-`wwkg` (CLI), `wwkg-node` (daemon), and `wwkg-gateway` (P2P gateway).
+This installs the Legra CLI plus the host, gateway, custodian, worker, and
+licensor daemons. To install and start the per-user services afterward:
 
 ```bash
-brew install dataroadinc/tap/wwkg
+legra install --all --user
 ```
 
-After installation, start the node and gateway:
+## Install dotenvage
 
 ```bash
-wwkg node start
-wwkg gateway start
-```
-
-### dotenvage
-
-CLI and library for encrypting secrets in `.env` files using age encryption.
-
-```bash
-brew install dataroadinc/tap/dotenvage
+brew install legra-ai/tap/dotenvage
 ```
 
 ## Upgrade
 
 ```bash
-brew upgrade dataroadinc/tap/<formula>
+brew upgrade legra-ai/tap/<formula>
 ```
 
 ## License
 
-This tap repository and formula code are licensed under MIT.
-The software distributed by each formula remains separately licensed by
-DataRoad Inc.
+This tap repository and its formula code are licensed under MIT. Software
+distributed by each formula remains separately licensed.
