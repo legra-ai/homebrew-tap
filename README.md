@@ -6,18 +6,17 @@
 
 Homebrew formulae maintained by Legra.
 
-## Install Legra
+## Install Legra on macOS
 
 ```bash
-brew install legra-ai/tap/legra
+brew install --cask legra-ai/tap/legra
 ```
 
-This installs the Legra CLI plus the host, gateway, custodian, worker, and
-licensor daemons. To install and start the per-user services afterward:
-
-```bash
-legra install --all --user
-```
+The cask runs Legra's signed macOS package. After administrator authorization,
+the package installs the CLI and daemon binaries and automatically registers and
+starts the host, gateway, custodian, and worker as system LaunchDaemons. They run
+at boot without requiring a user to log in. The licensor binary is included for
+operators, but the licensor service is not installed.
 
 ## Install dotenvage
 

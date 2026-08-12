@@ -1,0 +1,59 @@
+name: Update Cask
+
+on:
+  repository_dispatch:
+    types: [update-cask]
+
+jobs:
+  update:
+    name: Update Legra macOS cask
+    runs-on: macos-14
+
+    steps:
+      - name: Checkout tap
+        uses: actions/checkout@v4
+
+      - name: Update cask
+        env:
+          VERSION: ${{ github.event.client_payload.version }}
+          PKG_SHA256: ${{ github.event.client_payload.pkg_sha256 }}
+        run: |
+          cat > Casks/legra.rb <<CASK
+          cask "legra" do
+            version "${VERSION}"
+            sha256 "${PKG_SHA256}"
+
+            url "https://releases.legra.ai/builds/#{version}/legra-#{version}-darwin-aarch64.pkg"
+            name "Legra"
+            desc "Peer-to-peer knowledge graph platform"
+            homepage "https://legra.ai/"
+
+            depends_on arch: :arm64
+            depends_on :macos
+
+            pkg "legra-#{version}-darwin-aarch64.pkg"
+
+            uninstall script:  {
+                        executable: "/usr/local/share/legra/uninstall.sh",
+                        sudo:       true,
+                      },
+                      pkgutil: "ai.legra.binaries"
+          end
+          CASK
+
+          sed -i '' 's/^          //' Casks/legra.rb
+
+          test/formula-contract.sh
+          brew style Casks/legra.rb
+
+          echo "Updated macOS cask to version ${VERSION}"
+          echo "  pkg sha256: ${PKG_SHA256}"
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/legra.rb
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "chore(cask): update to ${{ github.event.client_payload.version }}"
+          git push

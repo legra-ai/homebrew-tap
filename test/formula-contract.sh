@@ -7,7 +7,9 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)" || {
   exit 1
 }
 FORMULA="$REPO_ROOT/Formula/legra.rb"
+CASK="$REPO_ROOT/Casks/legra.rb"
 WORKFLOW="$REPO_ROOT/.github/workflows/update-formula.yml"
+CASK_WORKFLOW="$REPO_ROOT/.github/workflows/update-cask.yml"
 README="$REPO_ROOT/README.md"
 
 require_text() {
@@ -54,7 +56,25 @@ require_text "$WORKFLOW" 'https://releases.legra.ai/builds/'
 reject_text "$WORKFLOW" 'Formula/wwkg.rb'
 reject_text "$WORKFLOW" 'releases.wwkg.io'
 
-require_text "$README" 'brew install legra-ai/tap/legra'
+if [[ ! -f "$CASK" ]]; then
+  printf 'ERROR: Legra macOS cask is missing: %s\n' "$CASK" >&2
+  exit 1
+fi
+require_text "$CASK" 'cask "legra" do'
+require_text "$CASK" 'https://releases.legra.ai/builds/#{version}/legra-#{version}-darwin-aarch64.pkg'
+require_text "$CASK" 'pkg "legra-#{version}-darwin-aarch64.pkg"'
+require_text "$CASK" 'executable: "/usr/local/share/legra/uninstall.sh"'
+require_text "$CASK" 'pkgutil: "ai.legra.binaries"'
+reject_text "$CASK" 'legra install'
+reject_text "$CASK" '--user'
+reject_text "$CASK" 'wwkg'
+
+require_text "$CASK_WORKFLOW" 'types: [update-cask]'
+require_text "$CASK_WORKFLOW" 'Casks/legra.rb'
+require_text "$CASK_WORKFLOW" 'pkg "legra-#{version}-darwin-aarch64.pkg"'
+
+require_text "$README" 'brew install --cask legra-ai/tap/legra'
+require_text "$README" 'system LaunchDaemons'
 reject_text "$README" 'brew install dataroadinc/tap/wwkg'
 reject_text "$README" 'wwkg.io'
 
