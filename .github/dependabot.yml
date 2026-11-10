@@ -1,0 +1,18 @@
+version: 2
+updates:
+- package-ecosystem: github-actions
+  directory: /
+  schedule:
+    interval: daily
+  commit-message:
+    prefix: ci(deps)
+  groups:
+    compatible:
+      applies-to: version-updates
+      update-types:
+      - minor
+      - patch
+    security:
+      applies-to: security-updates
+      patterns:
+      - '*'
