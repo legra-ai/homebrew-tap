@@ -5,13 +5,10 @@ class Dotenvage < Formula
   license "CC-BY-SA-4.0"
 
   on_macos do
+    depends_on arch: :arm64
     on_arm do
       url "https://github.com/dataroadinc/dotenvage/releases/download/v0.7.1/dotenvage-aarch64-apple-darwin.zip"
       sha256 "9390c7bcde5a07bc37338281e21d4a99cdea1b23f2bf021e82a0eec02afbb74e"
-    end
-    on_intel do
-      url "https://github.com/dataroadinc/dotenvage/releases/download/v0.7.1/dotenvage-x86_64-apple-darwin.zip"
-      sha256 "5d59251c710151353bbe3cf54199ac92198214a3490b865533661d5ba7eb763a"
     end
   end
 
